@@ -9,6 +9,7 @@
 #define led 2
 
 int estado = 0;
+int canal = 8;
 
 void setup() {
   Serial.begin(115200);
@@ -17,8 +18,8 @@ void setup() {
   pinMode(led, OUTPUT);
   pinMode(apito, OUTPUT);
 
-//inicializa o esp8266 como access point no canal 8
-  boolean result = WiFi.softAP("COVID19", "12345678", 8);
+//inicializa o esp8266 como access point
+  boolean result = WiFi.softAP("COVID19", "12345678", canal);
   if(result == true){
     Serial.println("Tudo pronto!");
   }
@@ -45,8 +46,8 @@ void loop() {
   estado = 0;
   delay(250);
 
-  // WiFi.scanNetworks retorna o numero de redes wifi encontradas no canal 8
-  int n = WiFi.scanNetworks(false, true, 8);
+  // WiFi.scanNetworks retorna o numero de redes wifi encontradas
+  int n = WiFi.scanNetworks(false, true, canal);
   
   if (n == 0) {
     Serial.println("Nenhum wifi encontrado");
