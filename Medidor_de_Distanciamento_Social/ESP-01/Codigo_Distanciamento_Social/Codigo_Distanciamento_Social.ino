@@ -3,11 +3,14 @@
 //Feito por: André Oliveira Cunha
 //3° Periodo de Engenharia de Computacao - UFES
 
+//Biblioteca do ESP8266
+#include "ESP8266WiFi.h" 
 
-#include "ESP8266WiFi.h"
-#define apito 3
-#define led 2
+// Pinos do ESP-01
+#define apito 3 // GPIO2
+#define led 2 // TXD
 
+// Variáveis globais
 int estado = 0;
 int canal = 8;
 
@@ -15,11 +18,13 @@ void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
+
+  // Define os pinos do ESP-01 como saída
   pinMode(led, OUTPUT);
   pinMode(apito, OUTPUT);
 
-//inicializa o esp8266 como access point
-  boolean result = WiFi.softAP("COVID19", "12345678", canal);
+//Inicializa o esp8266 como access point em um canal específico
+  boolean result = WiFi.softAP("PET-ENGCOMP", "12345678", canal);
   if(result == true){
     Serial.println("Tudo pronto!");
   }
@@ -46,7 +51,7 @@ void loop() {
   estado = 0;
   delay(250);
 
-  // WiFi.scanNetworks retorna o numero de redes wifi encontradas
+  // WiFi.scanNetworks retorna o numero de redes wifi encontradas em um canal específico
   int n = WiFi.scanNetworks(false, true, canal);
   
   if (n == 0) {
@@ -55,8 +60,8 @@ void loop() {
     Serial.print(n);
     Serial.println(" redes encontradas");
     for (int i = 0; i < n; ++i) {
-      //verifica se a rede tem o nome "COVID19"
-      if(WiFi.SSID(i) == "COVID19"){
+      //verifica se a rede tem o nome "PET-ENGCOMP"
+      if(WiFi.SSID(i) == "PET-ENGCOMP"){
         Serial.print(i + 1);
         Serial.print(") ");
         Serial.print(WiFi.SSID(i));// SSID
@@ -70,9 +75,11 @@ void loop() {
     }
     Serial.println("");
   }
+  // Chama a função para emitir um alerta ou não
   alertaDeProximidade(estado);
 }
 
+// Função para emitir um alerta sonoro e visual
 void alertaDeProximidade(int estado){
   if(estado == 1){
       digitalWrite(led, HIGH);
